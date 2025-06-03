@@ -157,14 +157,14 @@ onMounted(() => {
   fetchDailyQuote(locale.value)
   fetchEvents()
 })
-
+const base = import.meta.env.BASE_URL
 // Carousel
 const currentSlide = ref(0)
 const carouselItems = [
-  { src: '/elmshorn-temple.png', captionKey: 'home.captions.view' },
-  { src: '/elmshorn-temple1.png', captionKey: 'home.captions.puja' },
-  { src: '/elmshorn-temple2.png', captionKey: 'home.captions.festival' },
-  { src: '/elmshorn-temple3.png', captionKey: 'home.captions.community' }
+  { src: `${base}elmshorn-temple.png`, captionKey: 'home.captions.view' },
+  { src: `${base}elmshorn-temple1.png`, captionKey: 'home.captions.puja' },
+  { src: `${base}elmshorn-temple2.png`, captionKey: 'home.captions.festival' },
+  { src: `${base}elmshorn-temple3.png`, captionKey: 'home.captions.community' }
 ]
 
 function nextSlide() {
