@@ -40,7 +40,7 @@
 
     <!-- Daily Quote -->
     <v-img
-      src="shubhashini-bg.jpg"
+      src="/shubhashini-bg.jpg"
       :height="quoteImageHeight"
       class="mb-6 mb-sm-8"
       cover

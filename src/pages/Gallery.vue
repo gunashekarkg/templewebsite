@@ -35,14 +35,13 @@ const { mobile } = useDisplay()
 
 // Local images from public folder
 const imageFiles = [
-  `${base}gallery/img1.png`,
-  `${base}gallery/img2.png`,
-  `${base}gallery/img3.png`,
-  `${base}gallery/img4.png`,
-  `${base}gallery/img5.png`,
-  `${base}gallery/img6.png`,
-  `${base}gallery/img7.png`,
-  `${base}gallery/img8.png`
+  `${base}gallery/img1.jpg`,
+  `${base}gallery/img2.jpg`,
+  `${base}gallery/img3.jpg`,
+  `${base}gallery/img4.jpg`,
+  `${base}gallery/img5.jpg`,
+  `${base}gallery/img6.jpg`,
+  `${base}gallery/img7.jpg`,
 ]
 
 const allImages = ref([])
