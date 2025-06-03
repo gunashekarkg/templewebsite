@@ -16,5 +16,8 @@ export default defineConfig({
     include: ['astronomy-engine'],
   },
   base: '/templewebsite/',
+  build: {
+    assetsDir: '.',
+  }
 })
 
