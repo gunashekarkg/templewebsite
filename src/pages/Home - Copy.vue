@@ -1,37 +1,20 @@
 <template>
-  <v-container class="position-relative">
+  <v-container class="position-relative pa-4">
     <h2 class="text-h4 mb-4">{{ $t('home.welcome') }}</h2>
 
-    <!-- 🧾 Daily Quote in a Card -->
-    <v-card class="mb-6" color="indigo lighten-5" elevation="1">
-      <v-card-title>
-        <v-icon class="mr-2" color="indigo">mdi-format-quote-open</v-icon>
-        <span class="font-weight-medium">{{ $t('home.dailyQuote') }}</span>
-      </v-card-title>
-      <v-card-text class="text-subtitle-1 font-italic">
-        "{{ dailyQuote }}"
-      </v-card-text>
-    </v-card>
-
-    <!-- 🌄 Carousel -->
+    <!-- Carousel -->
     <div class="carousel-wrapper mb-6">
       <v-carousel
         v-model="currentSlide"
         cycle
-        height="400"
+        :height="carouselHeight"
         hide-delimiters
         transition="fade-transition"
         interval="4000"
       >
-        <v-carousel-item
-          v-for="(item, i) in carouselItems"
-          :key="i"
-        >
+        <v-carousel-item v-for="(item, i) in carouselItems" :key="i">
           <v-img :src="item.src" height="100%">
-            <v-container
-              class="fill-height d-flex align-end justify-center"
-              style="background: rgba(0, 0, 0, 0.3);"
-            >
+            <v-container class="fill-height d-flex align-end justify-center" style="background: rgba(0, 0, 0, 0.3);">
               <h3 class="text-white">{{ $t(item.captionKey) }}</h3>
             </v-container>
           </v-img>
@@ -55,29 +38,32 @@
 
     <p class="mt-4">{{ $t('home.description') }}</p>
 
-    <!-- 🌐 Language Dropdown Selector -->
-    <v-select
-      class="mt-4 mb-6"
-      :items="[
-        { label: 'English', value: 'en' },
-        { label: 'Deutsch', value: 'de' }
-      ]"
-      item-title="label"
-      item-value="value"
-      v-model="currentLocale"
-      label="Language"
-      variant="outlined"
-      style="max-width: 250px"
-    />
+    <!-- Daily Quote -->
+    <v-img
+      src="/shubhashini-bg.jpg"
+      :height="quoteImageHeight"
+      class="mb-8"
+      cover
+    >
+      <v-container
+        class="fill-height d-flex align-center justify-center text-center"
+        style="background: rgba(0, 0, 0, 0.4);"
+      >
+        <div>
+          <h2 class="text-h4 text-white font-weight-bold mb-2">{{ $t('home.shubhashiniTitle') }}</h2>
+          <p class="text-white">{{ dailyQuote }}</p>
+        </div>
+      </v-container>
+    </v-img>
 
-    <!-- 📅 Events -->
+    <!-- Events List -->
     <v-divider class="my-6"></v-divider>
     <h3 class="text-h5 mb-2">{{ $t('home.upcomingEvents') }}</h3>
     <v-list two-line class="elevation-1 rounded-lg mb-6">
-      <v-list-item v-for="(event, i) in events" :key="i">
+      <v-list-item v-for="(event, i) in events" :key="i" @click="openEventModal(event)">
         <v-list-item-content>
           <v-list-item-title class="font-weight-medium">{{ event.title }}</v-list-item-title>
-          <v-list-item-subtitle>{{ event.date }}</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ formatDate(event.date) }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-icon>
           <v-icon color="primary">mdi-calendar</v-icon>
@@ -85,32 +71,25 @@
       </v-list-item>
     </v-list>
 
-    <!-- 🗓️ Calendar -->
-    <v-select
-      v-model="calendarType"
-      :items="['month', 'week', 'day']"
-      label="View"
-      class="mb-4"
-      style="max-width: 200px"
-    />
-    <v-sheet height="600" class="mb-8">
-      <v-calendar
-        :type="calendarType"
-        :events="calendarEvents"
-        color="primary"
-        @click:event="onEventClick"
-      />
-    </v-sheet>
+    <!-- Your existing content -->
+    <HinduCalendarWidget />
+
+    
   </v-container>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import axios from 'axios'
+import dayjs from 'dayjs'
+import { useDisplay } from 'vuetify'
+import HinduCalendarWidget from '@/components/HinduCalendarWidget.vue'
 
+const { smAndDown } = useDisplay()
 const { locale, t } = useI18n()
-const currentLocale = locale
+const quoteImageHeight = computed(() => smAndDown.value ? 200 : 400)
+const API = import.meta.env.VITE_API_BASE_URL
 
 const dailyQuote = ref('')
 const events = ref([])
@@ -120,25 +99,38 @@ const calendarType = ref('month')
 const selectedEvent = ref(null)
 const showDialog = ref(false)
 
+const carouselHeight = computed(() => smAndDown.value ? 250 : 400)
+
 function onEventClick({ event }) {
-  // Only show dialog if admin (future enhancement)
   selectedEvent.value = event
   showDialog.value = true
 }
 
+function openEventModal(event) {
+  selectedEvent.value = {
+    ...event,
+    start: new Date(event.date)
+  }
+  showDialog.value = true
+}
+
+function formatDate(date) {
+  return dayjs(date).locale(locale.value).format('MMMM D, YYYY')
+}
+
 async function fetchDailyQuote(lang) {
   try {
-    const quoteRes = await axios.get(`http://localhost:5000/api/quotes/daily?lang=${lang}`)
+    const quoteRes = await axios.get(`${API}/api/quotes/daily?lang=${lang}`)
     dailyQuote.value = quoteRes.data.quote
   } catch (err) {
     console.error('Quote error:', err)
-    dailyQuote.value = t('home.noQuote') // fallback
+    dailyQuote.value = t('home.noQuote')
   }
 }
 
 async function fetchEvents() {
   try {
-    const bookingRes = await axios.get('http://localhost:5000/api/bookings')
+    const bookingRes = await axios.get(`${API}/api/bookings`)
     const approved = bookingRes.data.filter(b => b.status === 'approved')
 
     events.value = approved.map(b => ({
@@ -148,8 +140,8 @@ async function fetchEvents() {
 
     calendarEvents.value = approved.map(b => ({
       name: b.program,
-      start: b.date,
-      end: b.date,
+      start: new Date(b.date),
+      end: new Date(b.date),
       color: 'indigo'
     }))
   } catch (err) {
@@ -157,17 +149,16 @@ async function fetchEvents() {
   }
 }
 
-watch(currentLocale, (newLang) => {
-  locale.value = newLang
+watch(locale, (newLang) => {
   fetchDailyQuote(newLang)
 })
 
 onMounted(() => {
-  fetchDailyQuote(currentLocale.value)
+  fetchDailyQuote(locale.value)
   fetchEvents()
 })
 
-// Carousel logic
+// Carousel
 const currentSlide = ref(0)
 const carouselItems = [
   { src: '/elmshorn-temple.png', captionKey: 'home.captions.view' },
@@ -183,7 +174,6 @@ function prevSlide() {
   currentSlide.value = (currentSlide.value - 1 + carouselItems.length) % carouselItems.length
 }
 </script>
-
 
 <style scoped>
 .carousel-wrapper {
@@ -250,5 +240,20 @@ function prevSlide() {
 @keyframes flicker {
   0% { transform: translateX(-50%) scaleY(1); opacity: 0.9; }
   100% { transform: translateX(-50%) scaleY(0.85); opacity: 0.6; }
+}
+
+@media (max-width: 600px) {
+  .diya-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .diya-btn.left {
+    left: 5px;
+  }
+
+  .diya-btn.right {
+    right: 5px;
+  }
 }
 </style>

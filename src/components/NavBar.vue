@@ -3,7 +3,7 @@
     <!-- Theme Toggle - Left Side -->
     <ThemeToggle mobile />
 
-    <v-toolbar-title class="text-white font-weight-bold">{{ $t('Navbar.welcome') }}</v-toolbar-title>
+    <v-toolbar-title class="text-white font-weight-bold welcome-title">{{ $t('Navbar.welcome') }}</v-toolbar-title>
 
     <v-spacer />
 
@@ -140,9 +140,7 @@ const localePath = (path = '') => `/${locale.value}${path}`
   align-items: center !important;
   justify-content: center !important;
 }
-</style>
 
-<style>
 .mobile-drawer .language-switcher {
   display: flex !important;
   gap: 8px !important;
@@ -166,4 +164,21 @@ const localePath = (path = '') => `/${locale.value}${path}`
   color: white !important;
   font-weight: bold !important;
 }
+
+.v-toolbar-title {
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.75rem) !important;
+}
+
+.nav-btn {
+  font-size: clamp(0.875rem, 1.5vw + 0.25rem, 1.125rem) !important;
+}
+
+.mobile-nav-item span {
+  font-size: clamp(0.875rem, 1.5vw + 0.25rem, 1.125rem) !important;
+}
+
+.welcome-title {
+  font-size: 0.9rem !important;
+}
+
 </style>

@@ -2,7 +2,7 @@
   <v-card class="hindu-calendar" elevation="3">
     <v-card-title class="bg-primary text-white">
       <v-icon left>mdi-calendar-heart</v-icon>
-      Hindu Panchangam (Elmshorn)
+      Panchangam
     </v-card-title>
 
     <v-card-text>
@@ -10,7 +10,7 @@
         v-model="selectedDate"
         @update:modelValue="calculatePanchangam"
         color="primary"
-        class="mb-4"
+        class="mb-4 custom-calendar"
       ></v-date-picker>
 
       <div v-if="loading" class="text-center py-4">
@@ -188,6 +188,28 @@ onMounted(calculatePanchangam);
 </script>
 
 <style scoped>
+::v-deep(.v-date-picker__title) {
+  display: none !important;
+}
+/* Responsive text using clamp() */
+.panchangam-details,
+.detail-item,
+.festivals,
+.v-card-title {
+  font-size: clamp(0.9rem, 1vw + 0.5rem, 1.2rem);
+}
+
+/* Responsive h3/h4 tags */
+h3,
+h4 {
+  font-size: clamp(1rem, 2vw + 0.5rem, 1.5rem);
+}
+
+/* Responsive chip text */
+::v-deep(.v-chip) {
+  font-size: clamp(0.8rem, 1vw + 0.3rem, 1.1rem);
+}
+
 .hindu-calendar {
   border-radius: 12px;
   overflow: hidden;

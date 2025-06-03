@@ -37,7 +37,7 @@ const vuetify = createVuetify({
         colors: {
           background: '#ffffff',
           surface: '#f5f5f5',
-          primary: '#4caf50',
+          primary: '#F4C430',
           secondary: '#ff9800',
           saffron: '#FF9933',
         },

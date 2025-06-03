@@ -1,9 +1,9 @@
 <template>
   <v-container class="position-relative pa-4">
-    <h2 class="text-h4 mb-4">{{ $t('home.welcome') }}</h2>
+    <h2 class="responsive-heading mb-3 mb-sm-4">{{ $t('home.welcome') }}</h2>
 
     <!-- Carousel -->
-    <div class="carousel-wrapper mb-6">
+    <div class="carousel-wrapper mb-4 mb-sm-6">
       <v-carousel
         v-model="currentSlide"
         cycle
@@ -15,7 +15,7 @@
         <v-carousel-item v-for="(item, i) in carouselItems" :key="i">
           <v-img :src="item.src" height="100%">
             <v-container class="fill-height d-flex align-end justify-center" style="background: rgba(0, 0, 0, 0.3);">
-              <h3 class="text-white">{{ $t(item.captionKey) }}</h3>
+              <h3 class="responsive-subheading text-white">{{ $t(item.captionKey) }}</h3>
             </v-container>
           </v-img>
         </v-carousel-item>
@@ -36,37 +36,37 @@
       </v-btn>
     </div>
 
-    <p class="mt-4">{{ $t('home.description') }}</p>
+    <p class="responsive-paragraph text-white">{{ $t('home.description') }}</p>
 
     <!-- Daily Quote -->
     <v-img
-      src="/shubhashini-bg.jpg"
+      src="shubhashini-bg.jpg"
       :height="quoteImageHeight"
-      class="mb-8"
+      class="mb-6 mb-sm-8"
       cover
     >
       <v-container
-        class="fill-height d-flex align-center justify-center text-center"
+        class="fill-height d-flex align-center justify-center text-center px-2 px-sm-4"
         style="background: rgba(0, 0, 0, 0.4);"
       >
         <div>
-          <h2 class="text-h4 text-white font-weight-bold mb-2">{{ $t('home.shubhashiniTitle') }}</h2>
-          <p class="text-white">{{ dailyQuote }}</p>
+          <h2 class="text-h6 text-sm-h4 text-white font-weight-bold mb-1 mb-sm-2">{{ $t('home.shubhashiniTitle') }}</h2>
+          <p class="text-caption text-sm-body-1 text-white">{{ $t('home.shubhashiniDescription') }}</p>
         </div>
       </v-container>
     </v-img>
 
     <!-- Events List -->
-    <v-divider class="my-6"></v-divider>
-    <h3 class="text-h5 mb-2">{{ $t('home.upcomingEvents') }}</h3>
-    <v-list two-line class="elevation-1 rounded-lg mb-6">
+    <v-divider class="my-4 my-sm-6"></v-divider>
+    <h3 class="text-subtitle-1 text-sm-h5 mb-2">{{ $t('home.upcomingEvents') }}</h3>
+    <v-list two-line class="elevation-1 rounded-lg mb-4 mb-sm-6">
       <v-list-item v-for="(event, i) in events" :key="i" @click="openEventModal(event)">
         <v-list-item-content>
-          <v-list-item-title class="font-weight-medium">{{ event.title }}</v-list-item-title>
-          <v-list-item-subtitle>{{ formatDate(event.date) }}</v-list-item-subtitle>
+          <v-list-item-title class="font-weight-medium text-body-2 text-sm-body-1">{{ event.title }}</v-list-item-title>
+          <v-list-item-subtitle class="text-caption text-sm-body-2">{{ formatDate(event.date) }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-icon>
-          <v-icon color="primary">mdi-calendar</v-icon>
+          <v-icon color="primary" size="small" class="text-sm-medium">mdi-calendar</v-icon>
         </v-list-item-icon>
       </v-list-item>
     </v-list>
@@ -255,5 +255,18 @@ function prevSlide() {
   .diya-btn.right {
     right: 5px;
   }
+}
+
+.responsive-heading {
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2.5rem);
+  font-weight: bold;
+}
+
+.responsive-subheading {
+  font-size: clamp(1.125rem, 1.5vw + 0.5rem, 1.75rem);
+}
+
+.responsive-paragraph {
+  font-size: clamp(0.875rem, 1vw + 0.3rem, 1.125rem);
 }
 </style>

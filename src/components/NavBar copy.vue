@@ -7,7 +7,17 @@
       color="white"
     />
 
-    <v-toolbar-title class="text-white">{{ $t('Navbar.welcome') }}</v-toolbar-title>
+    <v-toolbar-title 
+      class="text-white" 
+      :class="{
+        'text-h3': $vuetify.display.lgAndUp,
+        'text-h4': $vuetify.display.mdAndUp,
+        'text-h5': $vuetify.display.smAndUp,
+        'text-h6': $vuetify.display.smAndDown
+      }"
+    >
+      {{ $t('Navbar.welcome') }}
+    </v-toolbar-title>
 
     <v-spacer />
 
@@ -233,6 +243,32 @@ watch(() => route.params.locale, (newLocale) => {
 @media (max-width: 600px) {
   .v-toolbar__content {
     padding: 0 12px !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .v-toolbar-title {
+    font-size: 1rem !important; /* Mobile size */
+    line-height: 1.5rem !important;
+  }
+}
+
+/* Desktop sizes (will override automatically) */
+@media (min-width: 600px) {
+  .v-toolbar-title {
+    font-size: 1.25rem !important; /* Small desktop */
+  }
+}
+
+@media (min-width: 960px) {
+  .v-toolbar-title {
+    font-size: 1.5rem !important; /* Medium desktop */
+  }
+}
+
+@media (min-width: 1264px) {
+  .v-toolbar-title {
+    font-size: 1.75rem !important; /* Large desktop */
   }
 }
 </style>

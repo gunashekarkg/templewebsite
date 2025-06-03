@@ -2,26 +2,24 @@
   <v-btn-toggle
     v-model="lang"
     mandatory
-    color="primary"
     rounded
     :class="mobile ? 'ma-2' : 'mr-2'"
+    class="language-toggle"
   >
     <v-btn 
-      value="en" 
+      v-for="code in ['en', 'de']"
+      :key="code"
+      :value="code"
       :size="mobile ? 'small' : 'default'"
-      class="text-white"
+      :class="[
+        lang === code ? 'lang-active' : 'lang-inactive'
+      ]"
     >
-      🇬🇧 EN
-    </v-btn>
-    <v-btn 
-      value="de" 
-      :size="mobile ? 'small' : 'default'"
-      class="text-white"
-    >
-      🇩🇪 DE
+      {{ code.toUpperCase() }}
     </v-btn>
   </v-btn-toggle>
 </template>
+
 
 <script setup>
 import { useI18n } from 'vue-i18n'
@@ -47,7 +45,26 @@ watch(lang, (val) => {
 </script>
 
 <style scoped>
-.text-white {
-  color: white !important;
+.language-toggle .v-btn {
+  min-width: 60px;
+  margin: 0 4px;
+  height: 36px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.lang-active {
+  background-color: white !important;
+  color: #FF9933 !important; /* saffron text */
+  border: 1px solid white !important;
+}
+
+.lang-inactive {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 </style>

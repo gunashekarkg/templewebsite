@@ -2,191 +2,189 @@
   <v-card class="hindu-calendar" elevation="3">
     <v-card-title class="bg-primary text-white">
       <v-icon left>mdi-calendar-heart</v-icon>
-      Hindu Panchangam
+      Hindu Panchangam (Elmshorn)
     </v-card-title>
 
     <v-card-text>
-      <!-- Date Selector -->
-      <v-row class="mb-4">
-        <v-col cols="12" sm="6">
-          <v-date-picker
-            v-model="selectedDate"
-            :max="maxDate"
-            :min="minDate"
-            @update:modelValue="fetchPanchangam"
-            title="Select Date"
-            color="primary"
-          ></v-date-picker>
-        </v-col>
+      <v-date-picker
+        v-model="selectedDate"
+        @update:modelValue="calculatePanchangam"
+        color="primary"
+        class="mb-4"
+      ></v-date-picker>
 
-        <!-- Current Day Info -->
-        <v-col cols="12" sm="6">
-          <div v-if="loading" class="text-center py-4">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
-          </div>
+      <div v-if="loading" class="text-center py-4">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+      </div>
 
-          <div v-else-if="panchangam" class="panchangam-details">
-            <h3 class="text-h6 mb-2">{{ formattedDate }}</h3>
-            
-            <v-divider class="my-2"></v-divider>
-            
-            <div class="detail-item">
-              <v-icon color="orange">mdi-moon-waning-crescent</v-icon>
-              <span class="font-weight-bold">Tithi:</span> {{ panchangam.tithi }}
-            </div>
-            
-            <div class="detail-item">
-              <v-icon color="indigo">mdi-star</v-icon>
-              <span class="font-weight-bold">Nakshatra:</span> {{ panchangam.nakshatra }}
-            </div>
-            
-            <div class="detail-item">
-              <v-icon color="green">mdi-calendar-check</v-icon>
-              <span class="font-weight-bold">Yoga:</span> {{ panchangam.yoga }}
-            </div>
-            
-            <div class="detail-item">
-              <v-icon color="red">mdi-calendar-alert</v-icon>
-              <span class="font-weight-bold">Karana:</span> {{ panchangam.karana }}
-            </div>
+      <div v-else class="panchangam-details">
+        <h3 class="text-h6 mb-2">{{ formattedDate }}</h3>
+        <v-divider class="my-2" />
 
-            <v-divider class="my-2"></v-divider>
+        <!-- Panchangam Details -->
+        <div
+          v-for="(label, key) in basicDetails"
+          :key="key"
+          class="detail-item"
+        >
+          <v-icon :color="label.color">{{ label.icon }}</v-icon>
+          <span class="font-weight-bold">{{ label.title }}:</span>
+          {{ panchangam[key] || 'N/A' }}
+        </div>
 
-            <div v-if="panchangam.festivals.length" class="festivals">
-              <h4 class="text-subtitle-1">Festivals:</h4>
-              <v-chip
-                v-for="(festival, index) in panchangam.festivals"
-                :key="index"
-                color="deep-orange"
-                text-color="white"
-                class="ma-1"
-              >
-                {{ festival }}
-              </v-chip>
-            </div>
-            <div v-else class="text-caption">No festivals today</div>
-          </div>
+        <!-- Sunrise & Sunset -->
+        <div class="detail-item">
+          <v-icon color="orange">mdi-weather-sunset-up</v-icon>
+          <span class="font-weight-bold">Sunrise:</span> {{ formattedSunrise }}
+        </div>
+        <div class="detail-item">
+          <v-icon color="orange">mdi-weather-sunset-down</v-icon>
+          <span class="font-weight-bold">Sunset:</span> {{ formattedSunset }}
+        </div>
 
-          <div v-else class="text-center py-4">
-            <v-alert type="error">Failed to load Panchangam data</v-alert>
-          </div>
-        </v-col>
-      </v-row>
+        <v-divider class="my-2" />
+
+        <!-- Inauspicious Times -->
+        <h4 class="text-subtitle-1 mb-2">Inauspicious Times:</h4>
+        <div
+          v-for="(label, key) in inauspiciousTimes"
+          :key="key"
+          class="detail-item"
+        >
+          <v-icon color="red">mdi-alert</v-icon>
+          <span class="font-weight-bold">{{ label }}:</span>
+          {{ formatTime(panchangam[key]?.start) }} - {{ formatTime(panchangam[key]?.end) }}
+        </div>
+
+        <v-divider class="my-2" />
+
+        <!-- Auspicious Times -->
+        <h4 class="text-subtitle-1 mb-2">Auspicious Times:</h4>
+        <div class="detail-item">
+          <v-icon color="green">mdi-clock-check</v-icon>
+          <span class="font-weight-bold">Abhijit Muhurta:</span>
+          {{ formatTime(panchangam.abhijit?.start) }} - {{ formatTime(panchangam.abhijit?.end) }}
+        </div>
+
+        <v-divider class="my-2" />
+
+        <!-- Lagna -->
+        <div class="detail-item">
+          <v-icon color="purple">mdi-zodiac-aries</v-icon>
+          <span class="font-weight-bold">Current Lagna:</span> {{ panchangam.lagna || 'N/A' }}
+        </div>
+
+        <v-divider class="my-2" />
+
+        <!-- Festivals -->
+        <div v-if="panchangam.festivals.length" class="festivals">
+          <h4 class="text-subtitle-1">Festivals:</h4>
+          <v-chip
+            v-for="(festival, index) in panchangam.festivals"
+            :key="index"
+            color="deep-orange"
+            text-color="white"
+            class="ma-1"
+          >
+            {{ festival }}
+          </v-chip>
+        </div>
+        <div v-else class="text-caption">No festivals today</div>
+      </div>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
+import { HinduCalendar } from '@/utils/hindicalendar';
+import { DateTime } from 'luxon';
 
-const selectedDate = ref(new Date().toISOString().substr(0, 10));
-const panchangam = ref(null);
+const selectedDate = ref(new Date());
 const loading = ref(false);
-const error = ref(null);
 
-// Date range limits (1 year back and forward)
-const minDate = computed(() => {
-  const date = new Date();
-  date.setFullYear(date.getFullYear() - 1);
-  return date.toISOString().substr(0, 10);
+const panchangam = ref({
+  tithi: '',
+  suryaNakshatra: '',
+  chandraNakshatra: '',
+  yoga: '',
+  karana: '',
+  paksha: '',
+  ritu: '',
+  ayana: '',
+  samvatsara: '',
+  sunrise: null,
+  sunset: null,
+  rahukalam: { start: null, end: null },
+  yamagandam: { start: null, end: null },
+  gulikai: { start: null, end: null },
+  abhijit: { start: null, end: null },
+  lagna: '',
+  festivals: []
 });
 
-const maxDate = computed(() => {
-  const date = new Date();
-  date.setFullYear(date.getFullYear() + 1);
-  return date.toISOString().substr(0, 10);
-});
+const formattedDate = computed(() =>
+  DateTime.fromJSDate(selectedDate.value).setLocale('en').toLocaleString(DateTime.DATE_HUGE)
+);
 
-const formattedDate = computed(() => {
-  return new Date(selectedDate.value).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-});
+const formatTime = (date) => {
+  return date ? DateTime.fromJSDate(date).toLocaleString(DateTime.TIME_SIMPLE) : '--:--';
+};
 
-const fetchPanchangam = async () => {
-  loading.value = true;
-  error.value = null;
-  
+const formattedSunrise = computed(() => formatTime(panchangam.value.sunrise));
+const formattedSunset = computed(() => formatTime(panchangam.value.sunset));
+
+const calculatePanchangam = async () => {
   try {
-    // Using a free API (no registration needed)
-    const response = await axios.get(
-      `https://www.vedicrishiastro.com/api/panchang/daily`, 
-      {
-        params: {
-          date: selectedDate.value,
-          timezone: '5.5' // IST
-        },
-        headers: {
-          'Accept': 'application/json'
-        }
-      }
-    );
+    loading.value = true;
+    const hc = new HinduCalendar(selectedDate.value, 53.755, 9.656); // Elmshorn
+    await hc.calculateAll();
 
-    // Fallback to mock data if API fails
-    if (!response.data || response.data.error) {
-      panchangam.value = getMockPanchangam();
-    } else {
-      panchangam.value = {
-        tithi: response.data.tithi || 'Not available',
-        nakshatra: response.data.nakshatra || 'Not available',
-        yoga: response.data.yoga || 'Not available',
-        karana: response.data.karana || 'Not available',
-        festivals: response.data.festivals || []
-      };
-    }
+    panchangam.value = {
+      tithi: hc.tithi,
+      suryaNakshatra: hc.suryaNakshatra,
+      chandraNakshatra: hc.chandraNakshatra,
+      yoga: hc.yoga,
+      karana: hc.karana,
+      paksha: hc.paksha,
+      ritu: hc.ritu,
+      ayana: hc.ayana,
+      samvatsara: hc.samvatsara,
+      sunrise: hc.sunrise,
+      sunset: hc.sunset,
+      rahukalam: hc.rahukalam || { start: null, end: null },
+      yamagandam: hc.yamagandam || { start: null, end: null },
+      gulikai: hc.gulikai || { start: null, end: null },
+      abhijit: hc.abhijit || { start: null, end: null },
+      lagna: hc.lagna,
+      festivals: hc.festivals || []
+    };
   } catch (err) {
-    console.error("Error fetching panchangam:", err);
-    error.value = err.message;
-    panchangam.value = getMockPanchangam(); // Fallback to mock data
+    console.error('Failed to calculate Panchangam:', err);
   } finally {
     loading.value = false;
   }
 };
 
-// Mock data fallback
-const getMockPanchangam = () => {
-  const date = new Date(selectedDate.value);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  
-  // Simple mock logic based on date
-  const tithis = [
-    "Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami",
-    "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami",
-    "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima",
-    "Amavasya"
-  ];
-  
-  const nakshatras = [
-    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira",
-    "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha",
-    "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati",
-    "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha",
-    "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada",
-    "Uttara Bhadrapada", "Revati"
-  ];
-  
-  const festivals = [];
-  
-  // Add some mock festivals
-  if (month === 1 && day === 14) festivals.push("Makar Sankranti");
-  if (month === 3 && day === 25) festivals.push("Holi");
-  if (month === 8 && day === 15) festivals.push("Raksha Bandhan");
-  
-  return {
-    tithi: tithis[(day - 1) % tithis.length],
-    nakshatra: nakshatras[(day - 1) % nakshatras.length],
-    yoga: "Siddha Yoga",
-    karana: "Bava",
-    festivals
-  };
+const basicDetails = {
+  tithi: { title: 'Tithi', icon: 'mdi-moon-waning-crescent', color: 'orange' },
+  suryaNakshatra: { title: 'Surya Nakshatra', icon: 'mdi-weather-sunny', color: 'yellow' },
+  chandraNakshatra: { title: 'Chandra Nakshatra', icon: 'mdi-weather-night', color: 'blue' },
+  yoga: { title: 'Yoga', icon: 'mdi-yoga', color: 'green' },
+  karana: { title: 'Karana', icon: 'mdi-calendar-alert', color: 'red' },
+  paksha: { title: 'Paksha', icon: 'mdi-moon-first-quarter', color: 'purple' },
+  ritu: { title: 'Ritu', icon: 'mdi-seasons', color: 'teal' },
+  ayana: { title: 'Ayana', icon: 'mdi-compass', color: 'indigo' },
+  samvatsara: { title: 'Samvatsara', icon: 'mdi-calendar-star', color: 'brown' }
 };
 
-onMounted(fetchPanchangam);
+const inauspiciousTimes = {
+  rahukalam: 'Rahukalam',
+  yamagandam: 'Yamagandam',
+  gulikai: 'Gulikai'
+};
+
+onMounted(calculatePanchangam);
 </script>
 
 <style scoped>
@@ -202,20 +200,11 @@ onMounted(fetchPanchangam);
 .detail-item {
   display: flex;
   align-items: center;
+  gap: 8px;
   margin: 8px 0;
-}
-
-.detail-item i {
-  margin-right: 12px;
 }
 
 .festivals {
   margin-top: 16px;
-}
-
-@media (max-width: 960px) {
-  .hindu-calendar {
-    margin-bottom: 24px;
-  }
 }
 </style>
