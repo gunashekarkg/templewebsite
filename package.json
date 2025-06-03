@@ -1,0 +1,36 @@
+{
+  "name": "temple-site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@mdi/js": "^7.4.47",
+    "astronomia": "^4.1.1",
+    "astronomy-engine": "^2.1.19",
+    "axios": "^1.9.0",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "glightbox": "^3.3.1",
+    "i18n": "^0.15.1",
+    "luxon": "^3.6.1",
+    "mhah-panchang": "^1.2.0",
+    "pinia": "^3.0.2",
+    "suncalc": "^1.9.0",
+    "vue": "^3.5.13",
+    "vue-i18n": "^11.1.5",
+    "vue-router": "^4.5.1",
+    "vuetify": "^3.8.7",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.3.5",
+    "vite-plugin-commonjs": "^0.10.4"
+  }
+}

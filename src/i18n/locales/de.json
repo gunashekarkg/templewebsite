@@ -1,0 +1,41 @@
+{
+  "home": {
+    "welcome": "Willkommen im Hindu-Tempel Elmshorn",
+    "description": "Nehmen Sie regelmäßig an spirituellen Veranstaltungen, Kulturprogrammen und gemeinnützigen Diensten teil.",
+    "shubhashiniTitle": "Shubhashini – Tägliche Weisheit",
+    "shubhashiniDescription": "Sei immer freundlich",
+    "noQuote": "Kein Zitat verfügbar.",
+    "captions": {
+      "view": "Tempelansicht",
+      "puja": "Puja-Zeremonie",
+      "festival": "Festivalfeier",
+      "community": "Gemeinschaftsversammlung"
+    },
+    "upcomingEvents": "Bevorstehende Veranstaltungen",
+    "events": {
+      "ramNavami": "Ram Navami Fest",
+      "hanumanJayanti": "Hanuman Jayanti",
+      "weeklyPuja": "Wöchentliche Puja"
+    }
+  },
+  "contact": {
+      "title": "Kontaktieren Sie uns",
+      "name": "Ihr Name",
+      "email": "Ihre E-Mail",
+      "message": "Ihre Nachricht",
+      "submit": "Nachricht senden",
+      "success": "Nachricht erfolgreich gesendet!",
+      "error": "Fehler beim Senden der Nachricht."
+    },
+    "Navbar":{
+      "home": "Startseite",
+      "gallery": "Galerie",
+      "contact": "Kontakt",
+      "welcome": "Willkommen im Elmshorn-Tempel"
+    },
+    "footer": {
+      "address": "Elmshorner Tempel, Deutschland",
+      "email": "info@elmshorntemple.de",
+      "phone": "123-456-789"
+    }
+}
