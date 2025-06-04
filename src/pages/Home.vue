@@ -40,11 +40,11 @@
 
     <!-- Daily Quote -->
     <v-img
-      src="/shubhashini-bg.jpg"
-      :height="quoteImageHeight"
-      class="mb-6 mb-sm-8"
-      cover
-    >
+        :src="`${base}shubhashini-bg.jpg`"
+        :height="quoteImageHeight"
+        class="mb-6 mb-sm-8"
+        cover
+      />
       <v-container
         class="fill-height d-flex align-center justify-center text-center px-2 px-sm-4"
         style="background: rgba(0, 0, 0, 0.4);"
