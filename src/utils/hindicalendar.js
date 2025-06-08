@@ -33,9 +33,9 @@ export class HinduCalendar {
       this.Karna = panchang.Karna || {};
       this.Yoga = panchang.Yoga || {};
       this.paksha = panchang.Paksha || '';
-      this.Ritu = panchang.Ritu || '';
-      this.Samvatsara = panchang.Samvatsara || '';
-      this.Ayana = panchang.Ayana || '';
+      this.ritu = panchang.Ritu || '';
+      this.samvatsara = panchang.Samvatsara || '';
+      this.ayana = panchang.Ayana || '';
       
       // ===== ASTRONOMICAL DATA =====
       this.SunTimes = {
