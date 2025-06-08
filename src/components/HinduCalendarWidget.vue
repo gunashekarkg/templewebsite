@@ -294,17 +294,23 @@
                         <tr>
                           <th>Zodiac Sign</th>
                           <th>Time</th>
-                          <th>Degree</th>
+                          <th>Duration</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(lagna, index) in panchangam.LagnaTimings" :key="'lagna-'+index">
+                        <tr
+                          v-for="(lagna, index) in groupedLagnaTimings"
+                          :key="'lagna-'+index"
+                          :class="{ 'bg-primary text-white': isCurrentLagna(lagna) }"
+                        >
                           <td>
                             <v-icon left>{{ getZodiacIcon(lagna.sign) }}</v-icon>
                             {{ lagna.sign }}
                           </td>
-                          <td>{{ formatTime(lagna.start) }} - {{ formatTime(lagna.end) }}</td>
-                          <td>{{ Math.round(lagna.degree) }}°</td>
+                          <td>
+                            {{ formatTime(lagna.start, panchangam.sunrise) }} - {{ formatTime(lagna.end, panchangam.sunrise) }}
+                          </td>
+                          <td>{{ formatDuration(lagna.start, lagna.end) }}</td>
                         </tr>
                       </tbody>
                     </v-table>
@@ -367,13 +373,42 @@ const formattedDate = computed(() =>
   DateTime.fromJSDate(selectedDate.value).setLocale('en').toLocaleString(DateTime.DATE_HUGE)
 );
 
-const formatTime = (date) => {
-  if (!date) return '--:--';
-  return DateTime.fromJSDate(date).toFormat('HH:mm');
-};
+const groupedLagnaTimings = computed(() => {
+  const slots = panchangam.value.LagnaTimings || [];
+  if (!slots.length) return [];
 
-const formattedSunrise = computed(() => formatTime(panchangam.value.sunrise));
-const formattedSunset = computed(() => formatTime(panchangam.value.sunset));
+  const grouped = [];
+  let current = {
+    sign: slots[0].sign,
+    start: slots[0].start,
+    end: slots[0].end
+  };
+
+  for (let i = 1; i < slots.length; i++) {
+    const slot = slots[i];
+    if (slot.sign === current.sign) {
+      current.end = slot.end; // Extend end time
+    } else {
+      grouped.push({ ...current });
+      current = {
+        sign: slot.sign,
+        start: slot.start,
+        end: slot.end
+      };
+    }
+  }
+
+  grouped.push({ ...current }); // push last one
+  return grouped;
+});
+
+const formatTime = (date, sunrise) => {
+  if (!date) return '--:--';
+  const dt = DateTime.fromJSDate(date);
+  const isAfterMidnight = sunrise && dt < DateTime.fromJSDate(sunrise);
+  const hours = isAfterMidnight ? dt.hour + 24 : dt.hour;
+  return `${hours}:${dt.minute.toString().padStart(2, '0')}${isAfterMidnight ? '*' : ''}`;
+};
 
 const isAuspicious = (name) => {
   const auspiciousNames = ['Shubh', 'Labh', 'Amrit', 'Char'];
@@ -391,6 +426,23 @@ const getPlanetIcon = (planet) => {
     'Shani': 'mdi-planet'
   };
   return icons[planet] || 'mdi-star';
+};
+
+const formatDuration = (start, end) => {
+  if (!start || !end) return '--';
+  const startDT = DateTime.fromJSDate(start);
+  const endDT = DateTime.fromJSDate(end);
+  const diff = endDT.diff(startDT, ['hours', 'minutes']).toObject();
+  const hours = Math.floor(diff.hours);
+  const minutes = Math.round(diff.minutes);
+  return `${hours}h ${minutes}m`;
+};
+
+const isCurrentLagna = (lagna) => {
+  const now = DateTime.now();
+  const start = DateTime.fromJSDate(lagna.start);
+  const end = DateTime.fromJSDate(lagna.end);
+  return now >= start && now < end;
 };
 
 const getPlanetColor = (planet) => {

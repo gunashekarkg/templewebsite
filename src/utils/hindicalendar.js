@@ -104,7 +104,7 @@ export class HinduCalendar {
       this.sunrise = this.SunTimes.sunrise;
       this.sunset = this.SunTimes.sunset;
 
-      //console.log('Full Panchang object:', panchang);
+      console.log('Full Panchang object:', panchang);
       console.log('Panchang calculation complete:', {
         date: this.date,
         location: `${this.latitude}, ${this.longitude}`,

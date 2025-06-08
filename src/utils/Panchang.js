@@ -1,9 +1,8 @@
+// Panchanga code
+// globals
 import * as SunCalc from 'suncalc';
 import { DateTime } from 'luxon';
 "use strict";
-/* This is the copy of pcal panchangJS*/
-// Panchang code
-// globals
 const d2r = Math.PI/180;
 const r2d = 180/Math.PI;
 const zn = ["Mesha","Vrushabha","Mithuna","Karkataka","Simha","Kanya","Tula","Vrushchika","Dhanu","Makara","Kumbha","Meena"];
@@ -782,17 +781,27 @@ class Panchang {
   // Lagna Timings Table
   calculateLagnaTimings(jd, latitude, longitude, tzone) {
     const timings = [];
-    const interval = 1 / 48;
-    for (let i = 0; i < 48; i++) {
-      const timeJD = jd + i * interval;
-      const siderealTime = this.calculateSiderealTime(timeJD, longitude, tzone);
+    const interval = 1 / 48; // 30-minute interval
+    const totalSlots = 48;
+
+    for (let i = 0; i < totalSlots; i++) {
+      const startJD = jd + i * interval;
+      const endJD = jd + (i + 1) * interval;
+
+      const siderealTime = this.calculateSiderealTime(startJD, longitude, tzone);
       const lagnaIndex = Math.floor(((siderealTime % 24) / 2) % 12);
+
+      const startTime = this.julianToDate(startJD);
+      const endTime = this.julianToDate(endJD);
+
       timings.push({
         sign: zn[lagnaIndex],
-        start: this.julianToDate(timeJD),
+        start: startTime,
+        end: endTime,
         degree: ((siderealTime % 2) * 30)
       });
     }
+
     return timings;
   }
 
