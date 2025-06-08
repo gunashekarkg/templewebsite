@@ -32,7 +32,7 @@ export class HinduCalendar {
       this.Nakshatra = panchang.Nakshatra || {};
       this.Karna = panchang.Karna || {};
       this.Yoga = panchang.Yoga || {};
-      this.Paksha = panchang.Paksha || '';
+      this.paksha = panchang.Paksha || '';
       this.Ritu = panchang.Ritu || '';
       this.Samvatsara = panchang.Samvatsara || '';
       this.Ayana = panchang.Ayana || '';
@@ -104,6 +104,7 @@ export class HinduCalendar {
       this.sunrise = this.SunTimes.sunrise;
       this.sunset = this.SunTimes.sunset;
 
+      console.log('Full Panchang object:', panchang);
       console.log('Panchang calculation complete:', {
         date: this.date,
         location: `${this.latitude}, ${this.longitude}`,
