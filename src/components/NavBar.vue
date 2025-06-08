@@ -79,6 +79,7 @@ const isSaffron = true
 const navItems = [
   { key: 'home', route: '/' },
   { key: 'gallery', route: '/gallery' },
+  { key: 'aboutus', route: '/aboutus' },
   { key: 'contact', route: '/contact' }
 ]
 

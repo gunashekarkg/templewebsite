@@ -30,11 +30,12 @@
     "Navbar":{
       "home": "Startseite",
       "gallery": "Galerie",
+      "aboutus": "Über uns",
       "contact": "Kontakt",
-      "welcome": "Willkommen im Elmshorn-Tempel"
+      "welcome": "Willkommen im Hindu-Tempel"
     },
     "footer": {
-      "address": "Elmshorner Tempel, Deutschland",
+      "address": "Hindu Tempel, Elmshorn Deutschland",
       "email": "info@elmshorntemple.de",
       "phone": "123-456-789"
     }

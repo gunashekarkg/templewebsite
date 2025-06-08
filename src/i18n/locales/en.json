@@ -1,6 +1,6 @@
 {
   "home": {
-    "welcome": "Welcome to Elmshorn Hindu Temple",
+    "welcome": "Welcome to Hindu Mandir Elmshorn",
     "description": "Join us for regular spiritual events, cultural programs, and community service.",
     "shubhashiniTitle": "Shubhashini – Daily Wisdom",
     "shubhashiniDescription": "Be kind always",
@@ -30,11 +30,12 @@
     "Navbar":{
       "home": "Home",
       "gallery": "Gallery",
+      "aboutus": "About Us",
       "contact": "Contact",
-      "welcome": "Welcome to Elmshorn Temple"
+      "welcome": "Welcome to Hindu Mandir"
     },
     "footer": {
-      "address": "Elmshorn Temple, Germany",
+      "address": "Hindu Mandir, Elmshorn Germany",
       "email": "info@elmshorntemple.de",
       "phone": "123-456-789"
     }

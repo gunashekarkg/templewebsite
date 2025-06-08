@@ -4,6 +4,7 @@ import Gallery from '@/pages/Gallery.vue'
 import Login from '@/pages/Login.vue'
 import Admin from '@/pages/Admin.vue'
 import Contact  from '@/pages/Contact.vue'
+import AboutUS from '@/pages/AboutUs.vue'
 import NotFound from '@/pages/NotFound.vue'
 import LocaleLayout from '@/layouts/LocaleLayout.vue'
 import { useLocaleStore } from '@/stores/localeStore'
@@ -20,6 +21,7 @@ const routes = [
       { path: 'gallery', name: 'Gallery', component: Gallery },
       { path: 'login', name: 'Login', component: Login },
       { path: 'Contact', name: 'Contact', component: Contact },
+      { path: 'AboutUS', name: 'AboutUS', component: AboutUS },
       { path: 'admin', name: 'Admin', component: Admin, meta: { requiresAuth: true } },
     ]
   },
