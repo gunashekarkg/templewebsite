@@ -11,9 +11,9 @@
                 <v-icon>mdi-map-marker</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>Elmshorn Hindu Temple</v-list-item-title>
+                <v-list-item-title>Hindu Mandir, Elmshorn</v-list-item-title>
                 <v-list-item-subtitle>
-                  Hauptstraße 123, 25335 Elmshorn, Germany
+                  Bauerweg 41, 25335 Elmshorn, Germany
                 </v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
@@ -23,7 +23,7 @@
                 <v-icon>mdi-phone</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>+49 123 456789</v-list-item-title>
+                <v-list-item-title>+49 1525 2891177</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
 
@@ -46,7 +46,7 @@
           style="border:0"
           loading="lazy"
           allowfullscreen
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2372.911430122073!2d9.649846715784622!3d53.75312858006345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b3de2b3d72e9ab%3A0xdeadbeef!2sElmshorn!5e0!3m2!1sen!2sde!4v1640000000000"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2358.8589355655654!2d9.660714311936216!3d53.75639487229602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b3d423757333cd%3A0x726ad57bbeb963a!2sBauerweg%2041%2C%2025335%20Elmshorn!5e0!3m2!1sen!2sde!4v1753009881693!5m2!1sen!2sde"
         ></iframe>
       </v-col>
     </v-row>
